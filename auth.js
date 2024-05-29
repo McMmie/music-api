@@ -3,6 +3,8 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const session = require('express-session');
+const User =  require('./models/user');
+
 
 const router = express.Router();
 const users = {};  // This should be replaced with a database in a real application
@@ -12,29 +14,47 @@ const SECRET_KEY = 'your_secret_key';
 // Register Route
 router.post('/register', async (req, res) => {
     const { username, password } = req.body;
-    if (users[username]) {
+    const valid = await User.findOne({name: username})
+    if (valid) {
         return res.status(400).json({ message: 'User already exists' });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    users[username] = { username, password: hashedPassword };
-    res.status(201).json({ message: 'User registered successfully' });
+
+    newUser = new User({
+        "name": username,
+        "passphrase": hashedPassword
+    })
+
+    try {
+        const savedUser = await newUser.save()
+        res.status(201).json({message: 'User registered successfully', "user": savedUser})
+    } catch (err) {
+        res.status(400).json({message: err.message})        
+    }
 });
 
 // Login Route
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
-    const user = users[username];
-    if (!user) {
-        return res.status(400).json({ message: 'Invalid username or password' });
+
+    try {
+        const user = await User.findOne({ name: username });
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid username or password' });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.passphrase);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Invalid username or password' });
+        }
+
+        const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: '1h' });
+        req.session.token = token;
+        res.json({ message: 'Logged in successfully', token });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-        return res.status(400).json({ message: 'Invalid username or password' });
-    }
-    const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: '1h' });
-    req.session.token = token;
-    res.json({ message: 'Logged in successfully', token });
-});
+})
 
 // Middleware to verify token
 const verifyToken = (req, res, next) => {
