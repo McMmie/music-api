@@ -5,6 +5,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    passphrase: {
+        type: String,
+        required: true
+    },
     createdOn: {
         type: Date,
         required: true,
@@ -12,4 +16,4 @@ const userSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('user', userSchema)
+module.exports = mongoose.model('User', userSchema)
