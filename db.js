@@ -14,11 +14,11 @@ const newdb = async () => {
     db.on('error', (error) => console.error('Database error:', error));
 
     // Optional: Close the connection when the Node.js process ends
-    process.on('SIGINT', async () => {
+    /*process.on('SIGINT', async () => {
         await mongoose.connection.close();
         console.log('Database connection closed due to application termination');
         process.exit(0);
-    });
+    });*/
 };
 
 module.exports = newdb
