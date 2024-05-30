@@ -1,33 +1,29 @@
 Music Lyrics and Data API
 This is a simple API built with Node.js, Express, and MongoDB to manage music lyrics and data. It includes user authentication to ensure only logged-in users can post new content.
 
-Table of Contents
-Features
-Installation
-Usage
-API Endpoints
-User Registration
-User Login
-Get All Songs
-Get Lyrics
-Post Content
-Technologies Used
-License
-Features
+#Table of Contents
+#Features
+#Installation
+#Usage
+#API Endpoints
+#User Registration
+#User Login
+#Get All Songs
+#Get Lyrics
+#Post Content
+#Technologies Used
+
+#Features
 User registration and login with password hashing and JWT-based authentication
 Middleware to protect routes and ensure only authenticated users can post content
 RESTful API design
-Installation
+#Installation
 Clone the repository:
 
-bash
-Copy code
 git clone https://github.com/yourusername/music-lyrics-api.git
 cd music-lyrics-api
 Install dependencies:
 
-bash
-Copy code
 npm install
 Set up MongoDB:
 
@@ -47,7 +43,7 @@ npm start
 Server will be running on:
 
 http://localhost:3000
-Usage
+#Usage
 API Endpoints
 User Registration
 URL: /user/register
@@ -118,7 +114,8 @@ Response:
 {
   "message": "Post successful",
 }
-Technologies Used
+
+#Technologies Used
 Node.js
 Express
 MongoDB (Mongoose)
